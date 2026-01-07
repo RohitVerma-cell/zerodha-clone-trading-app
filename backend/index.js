@@ -1,9 +1,13 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
+const bodyParser = require('body-parser');
 const HoldingModel = require('./model/HoldingsModel');
 const PositionModel = require('./model/PositionsModel');
 require('dotenv').config();
 const app = express();
+app.use(cors());
+app.use(bodyParser.json());
 
 const PORT = process.env.PORT;
 const uri = process.env.MONGO_URI;
@@ -174,6 +178,16 @@ const uri = process.env.MONGO_URI;
 //     })
 //     res.send('Positions added to database');
 // })
+
+app.get('/allHoldings', async (req, res) => {
+    let allHoldings = await HoldingModel.find({});
+    res.json(allHoldings);
+})
+
+app.get('/allPositions', async (req, res) => {
+    let allPositions = await PositionModel.find({});
+    res.json(allPositions);
+})
 
 app.listen(PORT, () => {
     console.log('Backend server is running on port' + PORT);
