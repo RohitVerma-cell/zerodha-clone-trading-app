@@ -4,6 +4,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const HoldingModel = require('./model/HoldingsModel');
 const PositionModel = require('./model/PositionsModel');
+const OrderModel = require('./model/OrdersModel');
 require('dotenv').config();
 const app = express();
 app.use(cors());
@@ -188,6 +189,17 @@ app.get('/allPositions', async (req, res) => {
     let allPositions = await PositionModel.find({});
     res.json(allPositions);
 })
+
+app.post('/newOrder', (req, res) => {
+    let newOrder = new OrderModel({
+        name: req.body.name,
+        qty: req.body.qty,
+        price: req.body.price,
+        mode: req.body.mode,
+    });
+    newOrder.save();
+    res.send('Order received');
+});
 
 app.listen(PORT, () => {
     console.log('Backend server is running on port' + PORT);
