@@ -3,17 +3,15 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 
-const Signup = () => {
+const Login = () => {
   const navigate = useNavigate();
   const [inputValue, setInputValue] = useState({
     email: "",
     password: "",
-    username: "",
   });
 
-  const { email, password, username } = inputValue;
+  const { email, password } = inputValue;
 
-  // Handle input changes
   const handleOnChange = (e) => {
     const { name, value } = e.target;
     setInputValue({
@@ -22,24 +20,23 @@ const Signup = () => {
     });
   };
 
-  // Toast helpers
   const handleError = (err) =>
     toast.error(err, { position: "bottom-left" });
-  const handleSuccess = (msg) =>
-    toast.success(msg, { position: "bottom-right" });
 
-  // Form submit
+  const handleSuccess = (msg) =>
+    toast.success(msg, { position: "bottom-left" });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!email || !password || !username) {
+    if (!email || !password) {
       return handleError("All fields are required");
     }
 
     try {
       const { data } = await axios.post(
-        "http://localhost:3002/api/auth/signup",
-        { email, password, username },
+        "http://localhost:3002/api/auth/login",
+        { email, password },
         { withCredentials: true }
       );
 
@@ -47,22 +44,22 @@ const Signup = () => {
 
       if (success) {
         handleSuccess(message);
-        setTimeout(() => navigate("/login"), 1000);
+        setTimeout(() => window.location.href = "http://localhost:5174/", 1000);
       } else {
         handleError(message);
       }
     } catch (error) {
-      console.log("Axios error:", error);
+      console.error("Axios error:", error);
       handleError(error.response?.data?.message || "Server not reachable");
     }
 
-    // Reset form
-    setInputValue({ email: "", password: "", username: "" });
+    setInputValue({ email: "", password: "" });
   };
 
   return (
     <div className="container">
-      <h2>Signup Account</h2>
+      <h2>Login Account</h2>
+
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="email">Email</label>
@@ -77,18 +74,6 @@ const Signup = () => {
         </div>
 
         <div>
-          <label htmlFor="username">Username</label>
-          <input
-            type="text"
-            name="username"
-            value={username}
-            placeholder="Enter your username"
-            onChange={handleOnChange}
-            autoComplete="username"
-          />
-        </div>
-
-        <div>
           <label htmlFor="password">Password</label>
           <input
             type="password"
@@ -96,14 +81,14 @@ const Signup = () => {
             value={password}
             placeholder="Enter your password"
             onChange={handleOnChange}
-            autoComplete="new-password"
+            autoComplete="current-password"
           />
         </div>
 
-        <button type="submit">Sign Up</button>
+        <button type="submit">Login</button>
 
         <span>
-          Already have an account? <Link to="/login">Login</Link>
+          Don’t have an account? <Link to="/signup">Signup</Link>
         </span>
       </form>
 
@@ -112,4 +97,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Login;
