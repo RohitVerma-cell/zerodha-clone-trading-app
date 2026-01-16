@@ -61,54 +61,88 @@ const Signup = () => {
   };
 
   return (
-    <div className="container">
-      <h2>Signup Account</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            name="email"
-            value={email}
-            placeholder="Enter your email"
-            onChange={handleOnChange}
-            autoComplete="email"
+    <div className="container pt-5 pb-3 mt-5">
+      <div className="row">
+
+        {/* LEFT IMAGE */}
+        <div className="col-6 pr-5 mt-5">
+          <img
+            src="../media/images/signup.png"
+            alt="Signup preview"
+            style={{ width: "90%" }}
           />
         </div>
 
-        <div>
-          <label htmlFor="username">Username</label>
-          <input
-            type="text"
-            name="username"
-            value={username}
-            placeholder="Enter your username"
-            onChange={handleOnChange}
-            autoComplete="username"
-          />
+        {/* RIGHT FORM */}
+        <div className="col-6 p-3 mt-3">
+
+          <h2 className="mb-2">Signup now</h2>
+          <p className="text-muted mb-4">
+            Create your account to continue
+          </p>
+
+          <form onSubmit={handleSubmit}>
+
+            <div className="mb-3">
+              <label className="form-label">Email</label>
+              <input
+                type="email"
+                name="email"
+                value={email}
+                placeholder="Enter your email"
+                onChange={handleOnChange}
+                autoComplete="email"
+                className="form-control"
+              />
+            </div>
+
+            <div className="mb-3">
+              <label className="form-label">Username</label>
+              <input
+                type="text"
+                name="username"
+                value={username}
+                placeholder="Enter your username"
+                onChange={handleOnChange}
+                autoComplete="username"
+                className="form-control"
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="form-label">Password</label>
+              <input
+                type="password"
+                name="password"
+                value={password}
+                placeholder="Enter your password"
+                onChange={handleOnChange}
+                autoComplete="new-password"
+                className="form-control"
+              />
+            </div>
+
+            <button type="submit" className="btn btn-primary w-100">
+              Sign up
+            </button>
+
+            <p className="text-center text-muted mt-3">
+              Already have an account?{" "}
+              <Link to="/login">Login</Link>
+            </p>
+
+          </form>
+
+          <ToastContainer />
         </div>
 
-        <div>
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            name="password"
-            value={password}
-            placeholder="Enter your password"
-            onChange={handleOnChange}
-            autoComplete="new-password"
-          />
-        </div>
-
-        <button type="submit">Sign Up</button>
-
-        <span>
-          Already have an account? <Link to="/login">Login</Link>
-        </span>
-      </form>
-
-      <ToastContainer />
+      </div>
     </div>
+
+
+
+
+
   );
 };
 

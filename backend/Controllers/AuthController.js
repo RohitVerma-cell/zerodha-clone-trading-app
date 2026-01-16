@@ -1,19 +1,25 @@
 const User = require("../model/UserModel");
 const { createSecretToken } = require("../utils/SecretToken");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
-// ================== SIGNUP ==================
+
 module.exports.Signup = async (req, res) => {
   try {
-    const { email, password, username } = req.body;
+    let { email, username, password } = req.body;
+//     console.log("LOGIN EMAIL:", email);
+// console.log("USER FOUND:", user);
 
-    // Validation
-    if (!email || !password || !username) {
+    if (!email || !username || !password) {
       return res.status(400).json({
         success: false,
         message: "All fields are required",
       });
     }
+
+    // Normalize
+    email = email.trim().toLowerCase();
+    password = password.trim();
 
     // Check existing user
     const existingUser = await User.findOne({ email });
@@ -27,34 +33,19 @@ module.exports.Signup = async (req, res) => {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create user
-    const user = await User.create({
+    // Save user
+    await User.create({
       email,
       username,
-      password: hashedPassword,
-    });
-
-    // Create JWT
-    const token = createSecretToken(user._id);
-
-    // Set cookie
-    res.cookie("token", token, {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: false, // set true in production (HTTPS)
+      password,
     });
 
     return res.status(201).json({
       success: true,
-      message: "User signed up successfully",
-      user: {
-        id: user._id,
-        email: user.email,
-        username: user.username,
-      },
+      message: "Signup successful",
     });
   } catch (error) {
-    console.error(error);
+    console.error("Signup Error:", error);
     return res.status(500).json({
       success: false,
       message: "Server error",
@@ -62,58 +53,44 @@ module.exports.Signup = async (req, res) => {
   }
 };
 
-// ================== LOGIN ==================
+
+
 module.exports.Login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Validation
-    if (!email || !password) {
-      return res.status(400).json({
-        success: false,
-        message: "All fields are required",
-      });
-    }
-
-    // Find user
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: "Incorrect email or password",
+        message: "Invalid credentials",
       });
     }
 
-    // Compare password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({
         success: false,
-        message: "Incorrect email or password",
+        message: "Invalid credentials",
       });
     }
 
-    // Create JWT
-    const token = createSecretToken(user._id);
-
-    // Set cookie
-    res.cookie("token", token, {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: false, // true in production
-    });
+    const token = jwt.sign(
+      { id: user._id },
+      process.env.TOKEN_KEY,
+      { expiresIn: "1d" }
+    );
 
     return res.status(200).json({
       success: true,
-      message: "User logged in successfully",
+      token,
       user: {
         id: user._id,
         email: user.email,
         username: user.username,
       },
     });
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
     return res.status(500).json({
       success: false,
       message: "Server error",

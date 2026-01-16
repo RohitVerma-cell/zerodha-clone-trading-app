@@ -10,8 +10,12 @@ const Menu = () => {
     setSelectedMenu(index);
   };
 
+  // const handleProfileClick = () => {
+  //   setIsProfiledropdownOpen(!isProfiledropdownOpen);
+  // };
+
   const handleProfileClick = () => {
-    setIsProfiledropdownOpen(!isProfiledropdownOpen);
+    window.location.href = "http://localhost:5173/login";
   };
 
   const menuClass = "menu";
@@ -56,7 +60,7 @@ const Menu = () => {
         <hr />
         <div className="profile" onClick={handleProfileClick}>
           <div className="avatar">ZU</div>
-          <p className="username">USERID</p>
+          <p className="username">Log Out</p>
         </div>
       </div>
     </div>

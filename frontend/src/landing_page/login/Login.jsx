@@ -44,7 +44,11 @@ const Login = () => {
 
       if (success) {
         handleSuccess(message);
-        setTimeout(() => window.location.href = "http://localhost:5174/", 1000);
+        // setTimeout(() => window.location.href = "http://localhost:5174/", 1000);
+        // localStorage.setItem("token", data.token);
+        // localStorage.setItem("user", JSON.stringify(data.user));
+
+        window.location.href = "http://localhost:5174/";
       } else {
         handleError(message);
       }
@@ -58,42 +62,63 @@ const Login = () => {
 
   return (
     <div className="container">
-      <h2>Login Account</h2>
+      <div className="row justify-content-center mt-5">
+        <div className="col-12 col-md-6 col-lg-4">
 
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            name="email"
-            value={email}
-            placeholder="Enter your email"
-            onChange={handleOnChange}
-            autoComplete="email"
-          />
+          <div className="p-4">
+            <h2 className="text-center mb-4">Login Account</h2>
+
+            <form onSubmit={handleSubmit}>
+
+              <div className="mb-3">
+                <label htmlFor="email" className="form-label">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={email}
+                  placeholder="Enter your email"
+                  onChange={handleOnChange}
+                  autoComplete="email"
+                  className="form-control"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label htmlFor="password" className="form-label">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  name="password"
+                  value={password}
+                  placeholder="Enter your password"
+                  onChange={handleOnChange}
+                  autoComplete="current-password"
+                  className="form-control"
+                />
+              </div>
+
+              <button type="submit" className="btn btn-primary w-100">
+                Login
+              </button>
+
+              <p className="text-center mt-3 mb-0">
+                Don’t have an account?{" "}
+                <Link to="/signup">Signup</Link>
+              </p>
+
+            </form>
+
+            <ToastContainer />
+          </div>
+
         </div>
-
-        <div>
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            name="password"
-            value={password}
-            placeholder="Enter your password"
-            onChange={handleOnChange}
-            autoComplete="current-password"
-          />
-        </div>
-
-        <button type="submit">Login</button>
-
-        <span>
-          Don’t have an account? <Link to="/signup">Signup</Link>
-        </span>
-      </form>
-
-      <ToastContainer />
+      </div>
     </div>
+
+
   );
 };
 
